@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Recorrido virtual 3D de la Unidad Educativa Ayacucho"
+    >
+
+    <title>
+        Unidad Educativa Ayacucho | Recorrido Virtual 3D
+    </title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <!--
+        Importamos Three.js directamente desde CDN.
+        Ya no usamos Vite.
+    -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+    }
+    </script>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     PANTALLA DE BIENVENIDA
+===================================================== -->
+
+<section id="welcome-screen">
+
+    <div class="welcome-background"></div>
+
+    <div class="welcome-content">
+
+        <div class="welcome-logo">
+            🛡️
+        </div>
+
+        <p class="welcome-small">
+            RECORRIDO VIRTUAL 3D
+        </p>
+
+        <h1>
+            UNIDAD EDUCATIVA
+            <strong>AYACUCHO</strong>
+        </h1>
+
+        <p class="welcome-description">
+            Explora nuestra institución educativa
+            mediante una experiencia virtual interactiva.
+        </p>
+
+        <div class="welcome-buttons">
+
+            <button
+                id="enter-world"
+                class="primary-button"
+            >
+                🎮 ENTRAR AL MUNDO 3D
+            </button>
+
+            <button
+                id="open-institution"
+                class="secondary-button"
+            >
+                🏫 CONOCER LA INSTITUCIÓN
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     APLICACIÓN
+===================================================== -->
+
+<div id="app">
+
+
+    <!-- =================================================
+         MENÚ SUPERIOR
+    ================================================= -->
+
+    <header id="topbar">
+
+        <div class="brand">
+
+            <div class="brand-shield">
+                🛡️
+            </div>
+
+            <div class="brand-text">
+
+                <strong>
+                    AYACUCHO
+                </strong>
+
+                <span>
+                    Unidad Educativa
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav id="main-navigation">
+
+            <button data-section="inicio">
+                Inicio
+            </button>
+
+            <button data-section="historia">
+                Historia
+            </button>
+
+            <button data-section="institucion">
+                Institución
+            </button>
+
+            <button data-section="docentes">
+                Docentes
+            </button>
+
+            <button data-section="materias">
+                Materias
+            </button>
+
+            <button data-section="galeria">
+                Galería
+            </button>
+
+            <button data-section="ubicacion">
+                Ubicación
+            </button>
+
+        </nav>
+
+
+        <button
+            id="menu-toggle"
+            aria-label="Abrir menú"
+        >
+            ☰
+        </button>
+
+    </header>
+
+
+
+    <!-- =================================================
+         MUNDO 3D
+    ================================================= -->
+
+    <main id="world">
+
+
+        <!-- PANTALLA DE CARGA -->
+
+        <div id="loading-screen">
+
+            <div class="loading-box">
+
+                <div class="loading-logo">
+                    🛡️
+                </div>
+
+                <h2>
+                    CARGANDO AYACUCHO
+                </h2>
+
+                <p id="loading-text">
+                    Preparando mundo 3D...
+                </p>
+
+                <div class="loading-bar">
+
+                    <div id="loading-progress"></div>
+
+                </div>
+
+                <span id="loading-percent">
+                    0%
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             HUD
+        ================================================= -->
+
+        <div id="game-hud">
+
+            <div class="hud-title">
+                🎮 RECORRIDO VIRTUAL
+            </div>
+
+            <div class="hud-controls">
+
+                <div class="key">
+                    W
+                </div>
+
+                <div class="key-row">
+
+                    <div class="key">
+                        A
+                    </div>
+
+                    <div class="key">
+                        S
+                    </div>
+
+                    <div class="key">
+                        D
+                    </div>
+
+                </div>
+
+                <span>
+                    Caminar
+                </span>
+
+                <div class="key shift">
+                    SHIFT
+                </div>
+
+                <span>
+                    Correr
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PUNTO DE INTERÉS
+        ================================================= -->
+
+        <div id="interaction-hint">
+
+            <div class="interaction-icon">
+                ✦
+            </div>
+
+            <div>
+
+                <strong>
+                    Punto de interés
+                </strong>
+
+                <small>
+                    Acércate para conocer más
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ESTADO
+        ================================================= -->
+
+        <div id="player-status">
+
+            <span class="status-dot"></span>
+
+            Explorando
+
+        </div>
+
+
+
+        <!-- =================================================
+             CONTROLES MÓVILES
+        ================================================= -->
+
+        <div id="mobile-controls">
+
+            <div class="mobile-dpad">
+
+                <button data-key="w">
+                    ▲
+                </button>
+
+                <div>
+
+                    <button data-key="a">
+                        ◀
+                    </button>
+
+                    <button data-key="s">
+                        ▼
+                    </button>
+
+                    <button data-key="d">
+                        ▶
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="mobile-run"
+                class="run-button"
+            >
+                🏃
+            </button>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =================================================
+         PANEL DE INFORMACIÓN
+    ================================================= -->
+
+    <aside
+        id="information-panel"
+        class="hidden"
+    >
+
+        <button
+            id="close-panel"
+            class="close-button"
+        >
+            ×
+        </button>
+
+        <div id="panel-content"></div>
+
+    </aside>
+
+
+
+    <!-- =================================================
+         GALERÍA
+    ================================================= -->
+
+    <div
+        id="gallery-modal"
+        class="hidden"
+    >
+
+        <div class="gallery-container">
+
+            <button
+                id="close-gallery"
+                class="modal-close"
+            >
+                ×
+            </button>
+
+            <img
+                id="gallery-image"
+                src=""
+                alt="Fotografía de la Unidad Educativa Ayacucho"
+            >
+
+            <div id="gallery-caption"></div>
+
+            <div class="gallery-buttons">
+
+                <button id="gallery-prev">
+                    ❮
+                </button>
+
+                <button id="gallery-next">
+                    ❯
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script
+    type="module"
+    src="./js/main.js"
+></script>
+
+
+</body>
+
+</html>
